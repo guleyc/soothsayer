@@ -1,5 +1,4 @@
-# soothsayer
-Soothsayer: An Optimized Ensemble Time Series Forecasting System
+# Soothsayer: An Optimized Ensemble Time Series Forecasting System
 
 ![Time Series Banner](https://guley.com.au/upload/timeseries.jpeg)
 
