@@ -1,5 +1,5 @@
 """
-Optimized Advanced Multi-Method Time Series Forecasting System
+Soothsayer: Optimized Advanced Multi-Method Time Series Forecasting System
 """
 
 import pandas as pd
@@ -318,7 +318,7 @@ class OptimizedTimeSeriesForecaster:
                 target_date.weekday(),  
                 target_date.month,      
                 target_date.day,        
-                target_date.quarter     
+                (target_date.month - 1) // 3 + 1
             ])
             
             return np.array(features).reshape(1, -1)
@@ -367,7 +367,7 @@ class OptimizedTimeSeriesForecaster:
                     date.weekday(),
                     date.month,
                     date.day,
-                    date.quarter
+                    (date.month - 1) // 3 + 1
                 ])
                 
                 X.append(feature_row)
@@ -1407,7 +1407,7 @@ class OptimizedTimeSeriesForecaster:
         
     def run_interactive_mode(self) -> None:
         """Run the interactive forecasting interface"""
-        print("Optimized Advanced Multi-Method Forecasting System")
+        print("Soothsayer: Forecasting System")
         print("="*55)
         
         if not self.load_data():
@@ -1532,7 +1532,7 @@ class OptimizedTimeSeriesForecaster:
                     print("Recent performance recalculated successfully!")
                 
                 elif choice == '7':
-                    print("Thank you for using the Optimized Forecasting System!")
+                    print("Thank you for using the Soothsayer: Forecasting System!")
                     break
                 
                 else:
