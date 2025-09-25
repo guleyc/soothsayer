@@ -100,8 +100,8 @@ class OptimizedTimeSeriesForecaster:
                 'max_depth': [10, 20]
             },
             'Support Vector Regression': {
-                'C': [10, 100],  # Reduced grid
-                'gamma': ['scale', 'auto']  # Only 2 options
+                'C': [10, 100],
+                'gamma': ['scale', 'auto']
             },
             'Neural Network': {
                 'hidden_layer_sizes': [(50, 25), (100, 50)],
@@ -140,7 +140,6 @@ class OptimizedTimeSeriesForecaster:
                 print(f"Error: File '{self.data_file}' not found!")
                 return False
             
-            # Load data
             self.data = pd.read_csv(self.data_file)
             print(f"Data loaded successfully. Shape: {self.data.shape}")
             
@@ -176,11 +175,9 @@ class OptimizedTimeSeriesForecaster:
             if not parsed:
                 self.data[date_col] = pd.to_datetime(self.data[date_col])
             
-            # Set date as index
             self.data.set_index(date_col, inplace=True)
             self.data.sort_index(inplace=True)
             
-            # Identify numeric columns
             numeric_cols = self.data.select_dtypes(include=[np.number]).columns.tolist()
             self.target_column = numeric_cols[0] if numeric_cols else None
             self.feature_columns = numeric_cols
@@ -189,7 +186,6 @@ class OptimizedTimeSeriesForecaster:
                 print("Error: No numeric columns found!")
                 return False
             
-            # Outlier detection and removal (IQR method)
             Q1 = self.data[self.target_column].quantile(0.25)
             Q3 = self.data[self.target_column].quantile(0.75)
             IQR = Q3 - Q1
@@ -630,7 +626,7 @@ class OptimizedTimeSeriesForecaster:
             
             for model_name, weight in weights.items():
                 model_performance = self.recent_performance.get(model_name, float('inf'))
-                if model_performance <= performance_threshold or len(filtered_weights) < 3:  # Keep at least 3 models
+                if model_performance <= performance_threshold or len(filtered_weights) < 3: 
                     filtered_weights[model_name] = weight
             
             total_filtered = sum(filtered_weights.values())
@@ -791,31 +787,12 @@ class OptimizedTimeSeriesForecaster:
                     ml_predictions = self.predict_ml_models(date, verbose=False)
                     statistical_predictions = self.predict_statistical_models_enhanced(date, verbose=False)
                     
-                    # Combine all predictions
                     all_predictions = {**ml_predictions, **statistical_predictions}
                     
                     if not all_predictions:
                         continue
                     
-                    pred_series = pd.Series(list(all_predictions.values()))
-                    median = pred_series.median()
-                    mad = (pred_series - median).abs().median()
-                    
-                    filtered_predictions = {}
-                    if mad > 0:
-                        z_score_threshold = 2.0
-                        lower_bound = median - z_score_threshold * mad / 0.6745
-                        upper_bound = median + z_score_threshold * mad / 0.6745
-                        
-                        for model, pred in all_predictions.items():
-                            if lower_bound <= pred <= upper_bound:
-                                filtered_predictions[model] = pred
-                    else:
-                        filtered_predictions = all_predictions
-                    
-                    if not filtered_predictions:
-                        filtered_predictions = all_predictions
-                    
+                    filtered_predictions = all_predictions                    
                     weights = self.calculate_dynamic_weights_enhanced(filtered_predictions)
                     weighted_prediction = sum(pred * weights.get(model, 0) for model, pred in filtered_predictions.items())
                     
@@ -1394,7 +1371,7 @@ class OptimizedTimeSeriesForecaster:
             ax3.grid(True, alpha=0.3)
             
             if model_performance:
-                models = list(model_performance.keys())[:10]  # Top 10 models
+                models = list(model_performance.keys())[:10] 
                 mae_values = [model_performance[m]['MAE'] for m in models]
                 
                 sorted_data = sorted(zip(models, mae_values), key=lambda x: x[1])
